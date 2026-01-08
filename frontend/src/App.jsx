@@ -10,9 +10,9 @@ function App() {
 
   return (
     <>
-      <Sample name={userName} age={Age}/>
+      <Sample name={userName} age={Age} isLoggin={true} />
 
-      <Sample name="Alice" age={30}/>
+      <Sample name="Alice" age={30} isLoggin={false}/>
       
     </>
   )
