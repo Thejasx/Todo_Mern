@@ -1,28 +1,28 @@
-import React from 'react'
-import './Sample.css'
+import React,{useState} from 'react'
 
-function Sample({ name, age, isLoggin }) {
+
+function Sample() {
+
+  let[counter,setCounter] = useState(0)
+  let[name,setName] = useState("")
 
 
 
   return (
     <>
 
-      <div>
-        <h1 className={isLoggin ? 'head' : 'nonuser'}>my name is {name}</h1>
+    <button onClick={()=>setCounter(counter - 1)}>-</button>
 
-        <h3 style={{ color: isLoggin ? 'red' : 'blueviolet' }}>age is {age}</h3>
-      </div>
+    <h1>{counter}</h1>
 
-      <div>
-        {
-          isLoggin ? <p>Login successs</p> : <p>please login</p>
-        }
+    <button onClick={() => setCounter(counter + 1)}>+</button>
 
-        <p>{isLoggin ? "welcome" : "Run.."}</p>
 
-        {/* { isLoggin && <h2>This is private info</h2>} */}
-      </div>
+{/* input data fetching onchange event */}
+    <input type="text" placeholder='enter name' onChange={(e)=>setName(e.target.value)} value={name} />
+    <p>{name}</p>
+
+
 
 
     </>
