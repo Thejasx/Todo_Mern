@@ -1,13 +1,18 @@
-import Sample from "./Sample"
-
-
+import {Route,Routes} from 'react-router-dom'
+import HomePage from './pages/HomePage'
+import AboutUsPage from './pages/AboutUsPage'
 function App() {
+
 
   
 
   return (
     <>
-      <Sample />
+    <Routes>
+      <Route path='/' element={<HomePage/>}/>
+      <Route path='/about' element={<AboutUsPage/>}/>
+    </Routes>
+     
 
       
       
