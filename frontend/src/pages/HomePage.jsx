@@ -1,88 +1,90 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate} from "react-router-dom";
-import BackendInstance from "../axios";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAddTodosMutation, useGetTodosQuery, useDeleteTodoMutation } from "../slices/todoApiSlice";
+import './TodoApp.css'
+
 import { toast } from "react-toastify";
 
 function HomePage() {
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   let [title, setTitle] = useState("");
   let [discription, setDiscription] = useState("");
 
-  let [todos, setTodos] = useState([]);
+  const { data: todos } = useGetTodosQuery();
+  const [addTodo] = useAddTodosMutation();
+  const [deleteTodo] = useDeleteTodoMutation();
 
-  const getTodo = async () => {
-    try {
-      let res = await BackendInstance.get();
-       setTodos(res.data);
-       console.log(res.data)
-    } catch (error) {
-      console.error(error ?.message || error?.data?.message);
-      toast.error(error ?.message || error?.data?.message)
-    }
-  };
-
-  
 
   const addTodoHandler = async (e) => {
-  e.preventDefault()
-    try{
-      await BackendInstance.post("/create",{title,discription});
-      toast.success("todo added")
-      getTodo()
-      setTitle("")
-      setDiscription("")
+    e.preventDefault();
+    try {
+      let res = await addTodo({ title, discription }).unwrap();
+      toast.success("todo added");
+      setTitle("");
+      setDiscription("");
     } catch (error) {
-      console.error(error ? error.message : "Unknown error");
-      toast.error(error ? error.message : "Unknown error")
+      console.error(error);
+      toast.error(error?.data?.message || error.error || "Unknown error");
     }
   };
 
-  useEffect(() => {
-    getTodo()
-    
-  }, []);
+
+  const DeleteTodoHandler = async (id) => {
+    try {
+      let res = await deleteTodo(id).unwrap()
+      toast.success("deleted")
+
+    } catch (error) {
+      console.error(error);
+      toast.error(error?.data?.message || error.error || "Unknown error");
+
+    }
+  }
 
   console.log(todos);
 
   return (
     <>
-      <div>
-        {
-        todos?.map((todo,index) => (
-          
-          <div key={index}>
-            <h1>{todo.title}</h1>
-            <p>{todo.discription}</p>
-            </div>
-          
-        )
-          
-        )}
-        
+    <div className="todos-list">
+  {todos?.map((todo) => (
+    <div key={todo._id} className="todo-item">  {/* Use _id as key */}
+      <h3 className="todo-title">{todo.title}</h3>
+      <p className="todo-description">{todo.discription}</p>  {/* Fixed typo */}
+      <button 
+        className="delete-btn"
+        onClick={() => DeleteTodoHandler(todo._id)}
+      >
+        Delete
+      </button>
+    </div>
+  ))}
+</div>
+
+<div className="form-container">
+  <form onSubmit={addTodoHandler} className="todo-form">
+    <input 
+      className="form-input title-input"
+      type="text"
+      placeholder="Title"
+      value={title}
+      onChange={(e) => setTitle(e.target.value)}
+    />
+    <textarea 
+      className="form-textarea"
+      placeholder="Description"
+      value={discription} 
+      onChange={(e) => setDiscription(e.target.value)}  
+    />
+    <button type="submit" className="submit-btn">Add Todo</button>
+  </form>
+</div>
 
 
-      </div>
-
-      <div>
-        <form onSubmit={addTodoHandler}>
-          <input
-            type="text"
-            placeholder="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-          <textarea
-            placeholder="description"
-            value={discription}
-            onChange={(e) => setDiscription(e.target.value)}
-          ></textarea>
-
-          <button>submit</button>
-        </form>
-      </div>
     </>
   );
- }
+}
 
 export default HomePage;
+
+
