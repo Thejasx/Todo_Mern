@@ -23,9 +23,24 @@ const todoApiSlice = apiSlice.injectEndpoints({
         url: `/api/todo/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Todo"],  
+      invalidatesTags: ["Todo"],
+    }),
+    getTodoById: builder.query({
+      query: (id) => ({
+        url: "/api/todo/getTodoById",
+        params: { id },
+      }),
+      providesTags: ["Todo"],
+    }),
+    updateTodo: builder.mutation({
+      query: (data) => ({
+        url: "/api/todo/updateTodo",
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: ["Todo"],
     }),
   }),
 });
 
-export const { useAddTodosMutation, useGetTodosQuery ,useDeleteTodoMutation} = todoApiSlice;
+export const { useAddTodosMutation, useGetTodosQuery, useDeleteTodoMutation, useGetTodoByIdQuery, useUpdateTodoMutation } = todoApiSlice;
