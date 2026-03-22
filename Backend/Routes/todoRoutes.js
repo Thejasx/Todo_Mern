@@ -1,7 +1,10 @@
 import express from "express";
 import { createTodos, deleteTodo, getTodos,getTodoById,updateTodo } from "../Controllers/todoControl.js";
+import { protect } from "../Middleware/authMiddleware.js";
 
 const todoRoutes = express.Router()
+
+todoRoutes.use(protect);
 
 // Get all todos
 todoRoutes.get("/" , getTodos )

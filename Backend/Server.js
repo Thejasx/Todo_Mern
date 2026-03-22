@@ -4,6 +4,8 @@ import express from 'express';
 import connectDB from './Config/db.js';
 import todoRoutes from './Routes/todoRoutes.js';
 import cors from 'cors'
+import cookieParser from 'cookie-parser';
+import authRoutes from './Routes/authRoutes.js';
 
 const app = express();
 
@@ -12,10 +14,15 @@ connectDB();
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cors())
+app.use(cors({
+    origin: 'http://localhost:5173', // Vite default port
+    credentials: true
+}))
+app.use(cookieParser());
 
 
 // Routes
+app.use('/api/auth', authRoutes)
 app.use('/api/todo', todoRoutes)
 
 
